@@ -21,7 +21,6 @@ function App() {
       // first get the weather icon picture
       const weatherIconCode = res.list[weatherTime].weather[0].icon;
       let iconURL = "http://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
-      let weatherIcon = `<Image src=${iconURL} class='card-img-top' alt='forecast for ${future} days out'>`;
 
       // next get temperature in Fahrenheit and other relevant statistics
       const weatherTemp = res.list[weatherTime].main.temp;
@@ -45,10 +44,11 @@ function App() {
       // $(".weather-list").append(weatherCard)
       weatherList.push({
         futureDate: futureDate,
+        future: future,
         cardText1: cardText1,
         cardText2: cardText2,
         cardText3: cardText3,
-        weatherIcon: weatherIcon,
+        iconURL: iconURL,
       })
 
       // increment weatherTime by 8 to get the next day's weather. Last day index will be 39, rather than 40.
@@ -57,17 +57,24 @@ function App() {
     }
 
     console.log(weatherList)
-    // setForecastCards(weatherList.map(card => {
-    //   return (
-    //     <ForecastCard
-    //       futureDate={card.futureDate}
-    //       cardText1={card.cardText1}
-    //       cardText2={card.cardText2}
-    //       cardText3={card.cardText3}
-    //       weatherIcon={card.weatherIcon}
-    //     />
-    //   )
-    // }))
+
+    setForecastCards(
+      <>
+        {weatherList.map(card => {
+          return ( 
+            <ForecastCard
+              key={card.futureDate}
+              futureDate={card.futureDate}
+              future={future}
+              cardText1={card.cardText1}
+              cardText2={card.cardText2}
+              cardText3={card.cardText3}
+              iconURL={card.iconURL}
+            />
+          )
+        })}
+      </>
+    )
   }
 
 
@@ -98,8 +105,6 @@ function App() {
     });
   }
 
-
-
   return (
     <div className="App">
       {loading}
@@ -113,12 +118,12 @@ function App() {
           <Form.Control type="text" placeholder="City Name" />
           <Form.Text className="text-muted">
             Enter a city name to search the weather in that city.
-          </Form.Text>
+            </Form.Text>
         </Form.Group>
 
         <Button variant="primary" type="submit">
           Submit
-        </Button>
+          </Button>
       </Form>
     </div>
   );

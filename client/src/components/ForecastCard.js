@@ -9,12 +9,9 @@ function ForecastCards(props) {
     return (react_1["default"].createElement(react_bootstrap_1.Card, null,
         react_1["default"].createElement(react_bootstrap_1.Card.Body, null,
             react_1["default"].createElement(react_bootstrap_1.Card.Title, null, props.futureDate),
-            props.weatherIcon,
-            react_1["default"].createElement(react_bootstrap_1.Card.Text, null,
-                react_1["default"].createElement("p", null, props.cardText1)),
-            react_1["default"].createElement(react_bootstrap_1.Card.Text, null,
-                react_1["default"].createElement("p", null, props.cardText2)),
-            react_1["default"].createElement(react_bootstrap_1.Card.Text, null,
-                react_1["default"].createElement("p", null, props.cardText3)))));
+            react_1["default"].createElement(react_bootstrap_1.Image, { src: props.iconURL, className: 'card-img-top', alt: "forecast for " + props.future + " days out" }),
+            react_1["default"].createElement(react_bootstrap_1.Card.Text, null, props.cardText1),
+            react_1["default"].createElement(react_bootstrap_1.Card.Text, null, props.cardText2),
+            react_1["default"].createElement(react_bootstrap_1.Card.Text, null, props.cardText3))));
 }
 exports["default"] = ForecastCards;

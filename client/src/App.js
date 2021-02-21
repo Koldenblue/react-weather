@@ -28,6 +28,7 @@ var react_1 = __importStar(require("react"));
 var Clock_1 = __importDefault(require("./components/Clock"));
 var Loading_1 = __importDefault(require("./components/Loading"));
 var react_bootstrap_1 = require("react-bootstrap");
+var ForecastCard_1 = __importDefault(require("./components/ForecastCard"));
 require("dotenv").config();
 function App() {
     var _a = react_1.useState(react_1["default"].createElement(react_1["default"].Fragment, null)), loading = _a[0], setLoading = _a[1];
@@ -42,7 +43,6 @@ function App() {
             // first get the weather icon picture
             var weatherIconCode = res.list[weatherTime].weather[0].icon;
             var iconURL = "http://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
-            var weatherIcon = "<Image src=" + iconURL + " class='card-img-top' alt='forecast for " + future + " days out'>";
             // next get temperature in Fahrenheit and other relevant statistics
             var weatherTemp = res.list[weatherTime].main.temp;
             var humidity = res.list[weatherTime].main.humidity;
@@ -61,27 +61,20 @@ function App() {
             // $(".weather-list").append(weatherCard)
             weatherList.push({
                 futureDate: futureDate,
+                future: future,
                 cardText1: cardText1,
                 cardText2: cardText2,
                 cardText3: cardText3,
-                weatherIcon: weatherIcon
+                iconURL: iconURL
             });
             // increment weatherTime by 8 to get the next day's weather. Last day index will be 39, rather than 40.
             weatherTime += 8;
             future++;
         }
         console.log(weatherList);
-        // setForecastCards(weatherList.map(card => {
-        //   return (
-        //     <ForecastCard
-        //       futureDate={card.futureDate}
-        //       cardText1={card.cardText1}
-        //       cardText2={card.cardText2}
-        //       cardText3={card.cardText3}
-        //       weatherIcon={card.weatherIcon}
-        //     />
-        //   )
-        // }))
+        setForecastCards(react_1["default"].createElement(react_1["default"].Fragment, null, weatherList.map(function (card) {
+            return (react_1["default"].createElement(ForecastCard_1["default"], { key: card.futureDate, futureDate: card.futureDate, future: future, cardText1: card.cardText1, cardText2: card.cardText2, cardText3: card.cardText3, iconURL: card.iconURL }));
+        })));
     };
     function searchForecast(event) {
         event.preventDefault();
