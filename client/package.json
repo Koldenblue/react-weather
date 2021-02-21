@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "dayjs": "^1.10.4",
+    "dotenv": "^8.2.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.0",
     "react-dom": "^17.0.1",
@@ -24,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "watch-ts": "tsc src/*.tsx --watch --jsx react -esModuleInterop"
+    "watch-sass": "sass.bat --watch ./src",
+    "watch-ts": "tsc src/*.tsx --watch src/components/*.tsx --watch --jsx react -esModuleInterop"
   },
   "eslintConfig": {
     "extends": [
