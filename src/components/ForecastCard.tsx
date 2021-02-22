@@ -1,29 +1,31 @@
 import React from 'react';
-import { Card, Image } from 'react-bootstrap';
+import { Card, Image, Col } from 'react-bootstrap';
 
 export default function ForecastCards(props: any) {
 
   return (
-    <Card style={{width: '12em'}}>
-      <Card.Body>
-        <Card.Title>
-          {props.futureDate}
-        </Card.Title>
+    <Col md={2}>
+      <Card style={{ width: '12em' }}>
+        <Card.Body>
+          <Card.Title>
+            {props.futureDate}
+          </Card.Title>
 
-        <Image src={props.iconURL} className='card-img-top' alt={`forecast for ${props.future} days out`} />
+          <Image src={props.iconURL} className='card-img-top' alt={`forecast for ${props.future} days out`} />
 
-        <Card.Text>
+          <Card.Text>
             {props.cardText1}
-        </Card.Text>
+          </Card.Text>
 
-        <Card.Text>
+          <Card.Text>
             {props.cardText2}
-        </Card.Text>
+          </Card.Text>
 
-        <Card.Text>
+          <Card.Text>
             {props.cardText3}
-        </Card.Text>
-      </Card.Body>
-    </Card>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </Col>
   )
 }

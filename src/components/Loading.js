@@ -4,9 +4,8 @@ import ReactLoading from "react-loading";
 export default function Loading() {
 
   return (
-    <>
-    <div className='screen-cover'>
-    </div>
+    <section className='loading-component'>
+      <div className='screen-cover'></div>
       <div className='loading'>
         <div className='loading-bottom'>
           <div className='loading-bars'>
@@ -14,6 +13,6 @@ export default function Loading() {
           </div>
         </div>
       </div>
-      </>
+    </section>
   )
 }

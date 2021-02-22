@@ -1,4 +1,4 @@
-.loading {
+.loading-component .loading {
   background-color: #ceffce;
   height: 100px;
   width: 200px;
@@ -8,8 +8,7 @@
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
-
-.loading-bottom {
+.loading-component .loading-bottom {
   position: relative;
   background-color: #cde9f7;
   height: 50px;
@@ -18,15 +17,13 @@
   left: 50%;
   transform: translateX(-50%);
 }
-
-.loading-bars {
+.loading-component .loading-bars {
   position: relative;
   top: -100%;
   left: 50%;
   transform: translateX(-50%);
 }
-
-.screen-cover {
+.loading-component .screen-cover {
   z-index: 9000;
   width: 100vw;
   height: 100vh;
@@ -34,8 +31,7 @@
   background-color: azure;
   position: fixed;
 }
-
-.loading, .loading-bottom, .loading-bars {
+.loading-component .loading, .loading-component .loading-bottom, .loading-component .loading-bars {
   z-index: 9999;
 }
 

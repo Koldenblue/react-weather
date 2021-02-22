@@ -8,11 +8,13 @@ import ForecastCard from "./components/ForecastCard";
 require("dotenv").config();
 
 function App() {
-  const [loading, setLoading] = useState(<></>);
-  const [prevCities, setPrevCities] = useState([]);
-  const [forecastCards, setForecastCards] = useState(<></>);
-  const [prevSearchBar, setPrevSearchBar] = useState(<></>);
-  const [validated, setValidated] = useState(false);
+  const [loading, setLoading] = useState(<></>);                  // JSX for loading screen
+  const [prevCities, setPrevCities] = useState([]);               // array of previous searches, stored in local storage
+  const [forecastCards, setForecastCards] = useState(<></>);      // JSX for the forecast cards display
+  const [prevSearchBar, setPrevSearchBar] = useState(<></>);      // JSX for the search bar of previous cities
+  const [validated, setValidated] = useState(false);              // Validation check for the form
+  const [fakeDelay, setFakeDelay] = useState(0);                  // amount of seconds that API call will be delayed
+
 
   /** Displays cards with the forecast on the screen.
    * @param {object} res - the response.list from the weather API
@@ -75,15 +77,31 @@ function App() {
     )
   }
 
-
+  /** Creates a list of previously searched cities.
+   * @param {array} storedCities - An array consisting of the names of the prev cities. Should be lowercased. */
   const populatePrevSearches = (storedCities) => {
-    console.log(prevCities)
     console.log(storedCities)
     let i = 0;
     setPrevSearchBar(<>
       {storedCities.map(city => {
+        // title case the city names
+        city = city.split('');
+        city[0] = city[0].toUpperCase();
+        try {
+          for (let i = 0, j = city.length; i < j; i++) {
+            if (city[i] === ' ') {
+              city[i + 1] = city[i + 1].toUpperCase();
+            }
+          }
+        }
+        catch (err) {
+          console.error(err);
+        }
+        city = city.join('')
+
+        // return a button list of the previous searches
         return (
-          <Button key={++i}>a city</Button>
+          <Button key={++i}>{city}</Button>
         )
       })}
     </>)
@@ -91,15 +109,18 @@ function App() {
 
 
   useEffect(() => {
-    let storedCities = JSON.parse(localStorage.getItem("prevCities"));
+    let storedCities = localStorage.getItem("prevCities");
+    storedCities = JSON.parse(storedCities);
+
     console.log(storedCities)
     if (storedCities !== null) {
+      setPrevCities(storedCities)
       populatePrevSearches(storedCities);
     }
   }, [])
 
 
-  function searchForecast(event) {
+  function submitForm(event) {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true)
@@ -110,36 +131,42 @@ function App() {
     }
 
     else {
-      // console.log(event.target)
       let moreDetails = event.target[0].checked;
       let cityName = event.target[1].value;
       let fakeDelay = event.target[3].value;
-      // console.log(moreDetails, fakeDelay, cityName)
-      let queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
-        + cityName
-        + "&units=imperial"
-        + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
-
-      setLoading(<Loading />);
-      setTimeout(() => {
-        axios.get(queryURL).then(res => {
-          setLoading(<></>)
-          console.log(res);
-
-          setPrevCities((prevCities) => prevCities.push(cityName))
-          // store city name and populate the previously searched list.
-          localStorage.setItem("prevCities", JSON.stringify(prevCities));
-          localStorage.setItem("lastForecast", JSON.stringify(res))
-
-          displayForecastCards(res.data, moreDetails);
-
-        }).catch(function (err) {
-          console.error(err);
-          // setLoading(<></>);
-          alert("That city's forecast could not be found!");
-        });
-      }, fakeDelay * 1000)
+      searchForecast(moreDetails, cityName, fakeDelay)
     }
+  }
+
+  const searchForecast = (moreDetails, cityName, fakeDelay) => {
+    let queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
+      + cityName
+      + "&units=imperial"
+      + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
+    setLoading(<Loading />);
+    setTimeout(() => {
+      axios.get(queryURL).then(res => {
+        setLoading(<></>)
+        console.log(res);
+        let prevCityArr = prevCities;
+        if (!prevCityArr.includes(cityName.toLowerCase())) {
+          prevCityArr.unshift(cityName.toLowerCase())
+        } else {
+          // put city at front of line
+        }
+        setPrevCities(prevCityArr)
+        // store city name and populate the previously searched list.
+        localStorage.setItem("prevCities", JSON.stringify(prevCityArr));
+        localStorage.setItem("lastForecast", JSON.stringify(res))
+        localStorage.setItem("test", '2')
+        displayForecastCards(res.data, moreDetails);
+
+      }).catch(function (err) {
+        console.error(err);
+        setLoading(<></>);
+        alert("That city's forecast could not be found!");
+      });
+    }, fakeDelay * 1000)
   }
 
   return (
@@ -148,25 +175,21 @@ function App() {
 
       <Jumbotron>
         <Row>
-          <Col></Col>
           <Col>
-            <h1>Weather Forecast</h1>
+            <h1 className='text-center'>Weather Forecast</h1>
           </Col>
-          <Col></Col>
         </Row>
 
         <Row>
-          <Col></Col>
-          <Col>
+          <Col className='text-center'>
             <Clock />
           </Col>
-          <Col></Col>
         </Row>
       </Jumbotron>
 
       <Container fluid>
 
-        <Form noValidate validated={validated} onSubmit={(event) => searchForecast(event)}>
+        <Form noValidate validated={validated} onSubmit={(event) => submitForm(event)}>
           <Form.Row>
             <Col>
               <Form.Check
@@ -190,7 +213,7 @@ function App() {
 
             <Col>
               <Form.Group controlId="delay-form">
-                <Form.Control type="number" placeholder="Seconds of delay" min='0' max='5' defaultValue='0' required />
+                <Form.Control type="number" placeholder="Seconds of delay" min='0' max='5' defaultValue='0' required onChange={(event) => setFakeDelay(event.target.value)}/>
                 <Form.Text className="text-muted">
                   Enter a number, 0 through 5, to simulate a delay of that many seconds in the API call.
                 </Form.Text>
@@ -205,8 +228,10 @@ function App() {
         <hr />
 
         <Row>
-          {prevSearchBar}
-          <button onClick={populatePrevSearches}>prev searches</button>
+          <Col md={2}>
+            {prevSearchBar}
+            <button onClick={populatePrevSearches}>prev searches</button>
+          </Col>
           {forecastCards}
         </Row>
       </Container>
