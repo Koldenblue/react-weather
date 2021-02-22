@@ -14,7 +14,11 @@ function App() {
   const [prevSearchBar, setPrevSearchBar] = useState(<></>);
   const [validated, setValidated] = useState(false);
 
-  const displayForecastCards = (res) => {
+  /** Displays cards with the forecast on the screen.
+   * @param {object} res - the response.list from the weather API
+   * @param {boolean} moreDetails - if this is true, then a forecast every 3 hours is displayed instead of every day.
+  */
+  const displayForecastCards = (res, moreDetails) => {
     let weatherTime = 0;
     let future = 1;
     let weatherList = [];
@@ -74,6 +78,7 @@ function App() {
 
   const populatePrevSearches = (storedCities) => {
     console.log(prevCities)
+    console.log(storedCities)
     let i = 0;
     setPrevSearchBar(<>
       {storedCities.map(city => {
@@ -105,31 +110,35 @@ function App() {
     }
 
     else {
-
-      let cityName = event.target[0].value;
+      // console.log(event.target)
+      let moreDetails = event.target[0].checked;
+      let cityName = event.target[1].value;
+      let fakeDelay = event.target[3].value;
+      // console.log(moreDetails, fakeDelay, cityName)
       let queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
         + cityName
         + "&units=imperial"
         + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
 
+      setLoading(<Loading />);
+      setTimeout(() => {
+        axios.get(queryURL).then(res => {
+          setLoading(<></>)
+          console.log(res);
 
-      // setLoading(<Loading />);
-      // axios.get(queryURL).then(res => {
-      //   setLoading(<></>)
-      //   console.log(res);
+          setPrevCities((prevCities) => prevCities.push(cityName))
+          // store city name and populate the previously searched list.
+          localStorage.setItem("prevCities", JSON.stringify(prevCities));
+          localStorage.setItem("lastForecast", JSON.stringify(res))
 
-      //   setPrevCities((prevCities) => prevCities.push(cityName))
-      //   // store city name and populate the previously searched list.
-      //   localStorage.setItem("prevCities", JSON.stringify(prevCities));
-      //   localStorage.setItem("lastForecast", JSON.stringify(res))
+          displayForecastCards(res.data, moreDetails);
 
-      //   displayForecastCards(res.data);
-
-      // }).catch(function (err) {
-      //   console.error(err);
-      //   setLoading(<></>);
-      //   alert("That city's forecast could not be found!");
-      // });
+        }).catch(function (err) {
+          console.error(err);
+          // setLoading(<></>);
+          alert("That city's forecast could not be found!");
+        });
+      }, fakeDelay * 1000)
     }
   }
 
@@ -181,7 +190,7 @@ function App() {
 
             <Col>
               <Form.Group controlId="delay-form">
-                <Form.Control type="number" placeholder="Seconds of delay" min='0' max='5' defaultValue='0' required/>
+                <Form.Control type="number" placeholder="Seconds of delay" min='0' max='5' defaultValue='0' required />
                 <Form.Text className="text-muted">
                   Enter a number, 0 through 5, to simulate a delay of that many seconds in the API call.
                 </Form.Text>
@@ -193,7 +202,7 @@ function App() {
           </Form.Row>
         </Form>
 
-<hr /> 
+        <hr />
 
         <Row>
           {prevSearchBar}

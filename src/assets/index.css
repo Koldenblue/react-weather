@@ -26,6 +26,19 @@
   transform: translateX(-50%);
 }
 
+.screen-cover {
+  z-index: 9000;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.6;
+  background-color: azure;
+  position: fixed;
+}
+
+.loading, .loading-bottom, .loading-bars {
+  z-index: 9999;
+}
+
 body {
   background-color: #d9f6ff;
   margin: 0;
