@@ -1,40 +1,48 @@
 {
   "name": "react-weather",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
-    "start:prod": "node server.js",
-    "start:dev": "concurrently \"nodemon --ignore 'client/*'\" \"npm run client\"",
-    "client": "cd client && npm run start",
-    "seed": "node scripts/seedDB.js",
-    "watch-client": "cd client && npm start",
-    "watch-server": "nodemon --ignore \"client/\" index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "cd client && npm run build",
-    "install": "cd client && npm install",
-    "heroku-postbuild": "npm run build",
-    "watch-sass": "sass.bat --watch ./client/src"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Koldenblue/react-weather.git"
-  },
-  "author": "Kevin Miller",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Koldenblue/react-weather/issues"
-  },
-  "homepage": "https://github.com/Koldenblue/react-weather#readme",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "axios": "^0.20.0",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "axios": "^0.21.1",
+    "bootstrap": "^4.6.0",
+    "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "if-env": "^1.0.4",
-    "morgan": "^1.10.0"
+    "react": "^17.0.1",
+    "react-bootstrap": "^1.5.0",
+    "react-dom": "^17.0.1",
+    "react-loading": "^2.0.3",
+    "react-scripts": "4.0.2",
+    "react-spring": "^8.0.27",
+    "typescript": "^4.1.5",
+    "web-vitals": "^1.0.1"
   },
-  "devDependencies": {
-    "concurrently": "^5.3.0"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "watch-sass": "sass.bat --watch ./src",
+    "watch-ts": "tsc src/*.tsx --watch src/components/*.tsx --watch --jsx react -esModuleInterop"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

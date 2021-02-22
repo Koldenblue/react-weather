@@ -1,9 +1,9 @@
 import axios from 'axios';
 import dayjs from 'dayjs';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Clock from './components/Clock'
 import Loading from './components/Loading';
-import { Button, Form, Card, Image } from 'react-bootstrap';
+import { Button, Form, Card, Image, Jumbotron, Row, Col } from 'react-bootstrap';
 import ForecastCard from "./components/ForecastCard";
 require("dotenv").config();
 
@@ -11,12 +11,13 @@ function App() {
   const [loading, setLoading] = useState(<></>);
   const [prevCities, setPrevCities] = useState([]);
   const [forecastCards, setForecastCards] = useState(<></>);
-  let currentTime = dayjs().format();
+  const [prevSearchBar, setPrevSearchBar] = useState(<></>);
 
-  const displayForecastCards = (res: any): void => {
+  const displayForecastCards = (res) => {
     let weatherTime = 0;
     let future = 1;
     let weatherList = [];
+    // iterate through the API response in order to populate the data on displayed cards
     while (weatherTime < 40) {
       // first get the weather icon picture
       const weatherIconCode = res.list[weatherTime].weather[0].icon;
@@ -27,21 +28,12 @@ function App() {
       const humidity = res.list[weatherTime].main.humidity;
       const weatherDescription = res.list[weatherTime].weather[0].description;
 
-      // create the main weather card body
-      // let cardBody = $("<div class='card-body'>")
-
-      // add on the day:
-      let futureDate = dayjs().add(future, 'd').format("dddd, MMMM D")
-      // Note: the text in the div must be set separately from creating the div element.
-      // let cardDateText = $('<div>').html("<strong>" + futureDate + "</strong>").attr("class", "card-header");
-
       // Create new paragraphs to put onto each weather card
+      let futureDate = dayjs().add(future, 'd').format("dddd, MMMM D")
       let cardText1 = "Temp: " + weatherTemp + " °F";
       let cardText2 = "Humidity: " + humidity + "%";
       let cardText3 = "Forecast: " + weatherDescription;
 
-      // let weatherCard = $("<div class='card text-white bg-info col-xl-2' style='width:18rem;'>").append(cardDateText).append(newIcon).append(cardBody);
-      // $(".weather-list").append(weatherCard)
       weatherList.push({
         futureDate: futureDate,
         future: future,
@@ -58,10 +50,11 @@ function App() {
 
     console.log(weatherList)
 
+    // Finally, set the cards JSX so that they are displayed.
     setForecastCards(
       <>
         {weatherList.map(card => {
-          return ( 
+          return (
             <ForecastCard
               key={card.futureDate}
               futureDate={card.futureDate}
@@ -78,11 +71,32 @@ function App() {
   }
 
 
-  function searchForecast(event: any): void {
+  const populatePrevSearches = (storedCities) => {
+    console.log(prevCities)
+    setPrevSearchBar(<>
+      {storedCities.map(city => {
+        return (
+          <Button>a city</Button>
+        )
+      })}
+    </>)
+  }
+
+
+  useEffect(() => {
+    let storedCities = localStorage.getItem("prevCities");
+    console.log(storedCities)
+    if (storedCities !== null) {
+      populatePrevSearches(storedCities);
+    }
+  }, [])
+
+
+  function searchForecast(event) {
     event.preventDefault();
     console.log(event.target[0].value);
-    let cityName: string = event.target[0].value;
-    let queryURL: string = "http://api.openweathermap.org/data/2.5/forecast?q="
+    let cityName = event.target[0].value;
+    let queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
       + cityName
       + "&units=imperial"
       + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
@@ -92,6 +106,7 @@ function App() {
       setLoading(<></>)
       console.log(res);
 
+      setPrevCities((prevCities) => prevCities.push(cityName))
       // store city name and populate the previously searched list.
       localStorage.setItem("prevCities", JSON.stringify(prevCities));
       localStorage.setItem("lastForecast", JSON.stringify(res))
@@ -125,6 +140,9 @@ function App() {
           Submit
           </Button>
       </Form>
+
+      <button onClick={populatePrevSearches}>prev searches</button>
+      {prevSearchBar}
     </div>
   );
 }

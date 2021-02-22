@@ -4,7 +4,7 @@ import { Card, Image } from 'react-bootstrap';
 export default function ForecastCards(props: any) {
 
   return (
-    <Card>
+    <Card style={{width: '12em'}}>
       <Card.Body>
         <Card.Title>
           {props.futureDate}
