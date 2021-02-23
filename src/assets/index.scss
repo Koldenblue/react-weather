@@ -1,8 +1,10 @@
 @use 'loadingScreen';
 
 body {
-  background-color: rgb(217, 246, 255);
+  background: rgb(217,246,255);
+  background: linear-gradient(0deg, rgba(217,246,255,1) 55%, rgba(254,255,238,1) 100%); 
   margin: 0;
+  height: 100vh;
 }
 
 .container-fluid {
@@ -11,6 +13,7 @@ body {
 
 .card {
   margin: 0.5em;
+  background-color: ghostwhite;
 }
 
 .current-conditions {
@@ -36,6 +39,7 @@ body {
   padding-bottom: 2rem;
   background-color: rgb(197, 197, 197);
   font-family: 'Merriweather', serif;
+  box-shadow: 0 5px 10px darkgray;
 }
 
 .current-weather-icon {

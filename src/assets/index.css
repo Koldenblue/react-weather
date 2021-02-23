@@ -36,8 +36,10 @@
 }
 
 body {
-  background-color: #d9f6ff;
+  background: #d9f6ff;
+  background: linear-gradient(0deg, #d9f6ff 55%, #feffee 100%);
   margin: 0;
+  height: 100vh;
 }
 
 .container-fluid {
@@ -46,6 +48,7 @@ body {
 
 .card {
   margin: 0.5em;
+  background-color: ghostwhite;
 }
 
 .current-conditions {
@@ -71,6 +74,7 @@ body {
   padding-bottom: 2rem;
   background-color: #c5c5c5;
   font-family: "Merriweather", serif;
+  box-shadow: 0 5px 10px darkgray;
 }
 
 .current-weather-icon {
