@@ -3,31 +3,31 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState, useRef } from 'react';
 import Clock from './components/Clock'
 import Loading from './components/Loading';
-import { Button, Form, Card, Image, Jumbotron, Row, Col, Container, ButtonGroup } from 'react-bootstrap';
+import { Button, Form, Jumbotron, Row, Col, Container, ButtonGroup } from 'react-bootstrap';
 import ForecastCard from "./components/ForecastCard";
 require("dotenv").config();
 
 function App() {
   const [loading, setLoading] = useState(<></>);                  // JSX for loading screen
-  const [prevCities, setPrevCities] = useState([]);               // array of previous searches, stored in local storage
   const [forecastCards, setForecastCards] = useState(<></>);      // JSX for the forecast cards display
   const [prevSearchBar, setPrevSearchBar] = useState(<></>);      // JSX for the search bar of previous cities
   const [validated, setValidated] = useState(false);              // Validation check for the form
-  const [fakeDelay, setFakeDelay] = useState(0);                  // amount of seconds that API call will be delayed
-  const [moreDetails, setMoreDetails] = useState(false);
   const [cityName, setCityName] = useState("");
-
   const fakeDelayRef = useRef();
   const moreDetailCheckboxRef = useRef();
 
+
   /** Displays cards with the forecast on the screen.
-   * @param {object} res - the response.list from the weather API
+   * @param {object} res - the response.data from the weather API
    * @param {boolean} moreDetails - if this is true, then a forecast every 3 hours is displayed instead of every day.
   */
-  const displayForecastCards = (res, moreDetails) => {
+  const displayForecastCards = (res) => {
     let weatherTime = 0;
     let future = 1;
     let weatherList = [];
+    let moreDetails = moreDetailCheckboxRef.current.checked;
+    console.log(moreDetails)
+
     // iterate through the API response in order to populate the data on displayed cards
     while (weatherTime < 40) {
       // first get the weather icon picture
@@ -44,7 +44,6 @@ function App() {
       let cardText1 = "Temp: " + weatherTemp + " °F";
       let cardText2 = "Humidity: " + humidity + "%";
       let cardText3 = "Forecast: " + weatherDescription;
-
       weatherList.push({
         futureDate: futureDate,
         future: future,
@@ -59,9 +58,7 @@ function App() {
       future++;
     }
 
-    console.log(weatherList)
-
-    // Finally, set the cards JSX so that they are displayed.
+    // Finally, set the forecast cards JSX so that they are displayed.
     setForecastCards(
       <>
         {weatherList.map(card => {
@@ -81,10 +78,10 @@ function App() {
     )
   }
 
-  /** Creates a list of previously searched cities.
-   * @param {array} storedCities - An array consisting of the names of the prev cities. Should be lowercased. */
+  /** Creates a list display of previously searched cities by mapping an array of city names to buttons.
+   * @param {array} storedCities - An array consisting of the names of the prev cities. Should be lowercased.
+  */
   const populatePrevSearches = (storedCities) => {
-    console.log(storedCities)
     let i = 0;
     setPrevSearchBar(
       <ButtonGroup vertical>
@@ -104,7 +101,6 @@ function App() {
           }
           city = city.join('')
 
-          // return a button list of the previous searches
           return (
             <Button key={i++}
               variant={i === 0 ? 'primary' : 'outline-primary'}
@@ -119,13 +115,13 @@ function App() {
   }
 
 
+  // upon page load, populate the previous searches bar and display the forecast for the most recent search
   useEffect(() => {
     let storedCities = localStorage.getItem("prevCities");
     if (storedCities !== null) {
       storedCities = JSON.parse(storedCities);
-      console.log(storedCities)
-      setPrevCities(storedCities)
       populatePrevSearches(storedCities);
+      searchForecast(storedCities[0])
     }
   }, [])
 
@@ -144,44 +140,43 @@ function App() {
   }
 
 
-  /** makes AJAX call to open weather api */
+  /** makes AJAX call to open weather api 
+   * @param {string} cityName - The name of a city to get the forecast for
+  */
   const searchForecast = (cityName) => {
     let delay = fakeDelayRef.current.value;
-    console.log(fakeDelayRef.current)
-    console.log(fakeDelayRef.current.value)
 
     let queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
       + cityName
       + "&units=imperial"
       + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
     setLoading(<Loading />);
+
+    // Set a timeout in order to simulate a fake delay in the AJAX call
     setTimeout(() => {
       axios.get(queryURL).then(res => {
         setLoading(<></>)
-        console.log(res);
-        console.log(prevCities)
+        console.log(res.data);
         let prevCityArr = JSON.parse(localStorage.getItem("prevCities"));
         prevCityArr = (prevCityArr === null ? [] : prevCityArr);
+        
+        // store the city name in an array in local storage, 
+        // at index 0 of the array so that it will be displayed at the top of the previously searched cities list
         if (!prevCityArr.includes(cityName.toLowerCase())) {
           prevCityArr.unshift(cityName.toLowerCase())
         } else {
-          // put city at front of line
           let cityIndex = prevCityArr.indexOf(cityName.toLowerCase());
           prevCityArr.splice(cityIndex, 1);
           prevCityArr.unshift(cityName.toLowerCase())
         }
-        console.log(prevCityArr)
-        setPrevCities(prevCityArr)
         // store city name and populate the previously searched list.
         localStorage.setItem("prevCities", JSON.stringify(prevCityArr));
-        localStorage.setItem("lastForecast", JSON.stringify(res))
-        localStorage.setItem("test", '2')
-        displayForecastCards(res.data, moreDetails);
+        displayForecastCards(res.data);
         populatePrevSearches(prevCityArr);
       }).catch(function (err) {
         console.error(err);
         setLoading(<></>);
-        alert("That city's forecast could not be found!");
+        alert("That city's forecast could not be found! Be sure to use correct spelling.");
       });
     }, delay * 1000)
 
@@ -214,7 +209,6 @@ function App() {
                 type='checkbox'
                 id={`detail-form`}
                 label={`More detailed forecast?`}
-                onChange={(event) => setMoreDetails(event.target.checked)}
                 ref={moreDetailCheckboxRef}
               />
             </Col>
@@ -240,7 +234,6 @@ function App() {
                   max='5' 
                   defaultValue='0' 
                   required 
-                  onChange={(event) => setFakeDelay(event.target.value)} 
                   ref={fakeDelayRef}
                 />
                 <Form.Text className="text-muted">

@@ -4,14 +4,14 @@ import { Card, Image, Col } from 'react-bootstrap';
 export default function ForecastCards(props: any) {
 
   return (
-    <Col md={2}>
-      <Card style={{ width: '12em' }}>
-        <Card.Body>
+    <Col lg={2}>
+      <Card style={{ width: '12em' }} >
+        <Card.Body className='current-conditions'>
           <Card.Title>
             {props.futureDate}
           </Card.Title>
 
-          <Image src={props.iconURL} className='card-img-top' alt={`forecast for ${props.future} days out`} />
+          <Image src={props.iconURL} className='card-img-top current-weather-icon' alt={`forecast for ${props.future} day(s) out`} />
 
           <Card.Text>
             {props.cardText1}

@@ -40,33 +40,8 @@ body {
   margin: 0;
 }
 
-.loading-weather {
-  visibility: hidden;
-}
-
-header {
-  background-color: #a11430;
-}
-
 .container-fluid {
   margin-top: 1em;
-}
-
-.loading-weather {
-  margin-top: 0;
-}
-
-.prev-searches {
-  margin-top: 2em;
-  padding-left: 1em;
-}
-
-.time-card {
-  /* margin-right: 1em; */
-}
-
-h1, .current-conditions {
-  font-family: "Merriweather", serif;
 }
 
 .card {
@@ -74,6 +49,7 @@ h1, .current-conditions {
 }
 
 .current-conditions {
+  font-family: "Merriweather", serif;
   font-size: large;
 }
 
@@ -81,16 +57,13 @@ h1, .current-conditions {
   padding-top: 2rem;
   padding-bottom: 2rem;
   background-color: #c5c5c5;
+  font-family: "Merriweather", serif;
 }
 
 .current-weather-icon {
   display: inline;
   position: relative;
   top: -1rem;
-}
-
-.currentCityTitle {
-  display: inline;
 }
 
 /*# sourceMappingURL=index.css.map */
