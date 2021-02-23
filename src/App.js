@@ -5,7 +5,9 @@ import Clock from './components/Clock'
 import Loading from './components/Loading';
 import { Button, Form, Jumbotron, Row, Col, Container, ButtonGroup } from 'react-bootstrap';
 import ForecastCard from "./components/ForecastCard";
-require("dotenv").config();
+import DetailedForecastCard from './components/DetailedForecastCard';
+var customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
 function App() {
   const [loading, setLoading] = useState(<></>);                  // JSX for loading screen
@@ -19,64 +21,113 @@ function App() {
 
   /** Displays cards with the forecast on the screen.
    * @param {object} res - the response.data from the weather API
-   * @param {boolean} moreDetails - if this is true, then a forecast every 3 hours is displayed instead of every day.
+   * @param {boolean} moreDetails - if this is true, then more detailed statistics are displayed..
   */
   const displayForecastCards = (res) => {
     let weatherTime = 0;
     let future = 1;
     let weatherList = [];
     let moreDetails = moreDetailCheckboxRef.current.checked;
-    console.log(moreDetails)
 
-    // iterate through the API response in order to populate the data on displayed cards
-    while (weatherTime < 40) {
-      // first get the weather icon picture
-      const weatherIconCode = res.list[weatherTime].weather[0].icon;
-      let iconURL = "http://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
+    if (moreDetails) {
+      console.log('more details')
+      while (weatherTime < 5) {
+        const weatherTemp = "Temp: " + res.list[weatherTime].main.temp + " °F";
+        const humidity = "Humidity: " + res.list[weatherTime].main.humidity + "%";
+        const weatherDescription = "Forecast: " + res.list[weatherTime].weather[0].description;
+        const cloudCover = "Cloud Cover: " + res.list[weatherTime].clouds.all + "%";
+        const feelsLike = "Feels Like: " + res.list[weatherTime].main.feels_like + " °F";
+        const minTemp = "Min Temp: " + res.list[weatherTime].main.temp_min + " °F";
+        const maxTemp = "Max Temp: " + res.list[weatherTime].main.temp_max + " °F";
+        const windSpeed = "Wind Speed: " + res.list[weatherTime].wind.speed + " miles/hour";
+        const time = dayjs(res.list[weatherTime].dt_txt, "YYYY-MM-DD h:mm:ss").format("dddd, MMMM D h:mm a")
+        console.log(time)
 
-      // next get temperature in Fahrenheit and other relevant statistics
-      const weatherTemp = res.list[weatherTime].main.temp;
-      const humidity = res.list[weatherTime].main.humidity;
-      const weatherDescription = res.list[weatherTime].weather[0].description;
-
-      // Create new paragraphs to put onto each weather card
-      let futureDate = dayjs().add(future, 'd').format("dddd, MMMM D")
-      let cardText1 = "Temp: " + weatherTemp + " °F";
-      let cardText2 = "Humidity: " + humidity + "%";
-      let cardText3 = "Forecast: " + weatherDescription;
-      weatherList.push({
-        futureDate: futureDate,
-        future: future,
-        cardText1: cardText1,
-        cardText2: cardText2,
-        cardText3: cardText3,
-        iconURL: iconURL,
-      })
-
-      // increment weatherTime by 8 to get the next day's weather. Last day index will be 39, rather than 40.
-      weatherTime += 8;
-      future++;
-    }
-
-    // Finally, set the forecast cards JSX so that they are displayed.
-    setForecastCards(
-      <>
+        weatherList.push({
+          weatherTemp: weatherTemp,
+          humidity: humidity,
+          weatherDescription: weatherDescription,
+          cloudCover: cloudCover,
+          feelsLike: feelsLike,
+          minTemp: minTemp,
+          maxTemp: maxTemp,
+          windSpeed: windSpeed,
+          time: time
+        })
+        weatherTime++;
+        future++;
+      }
+      setForecastCards(<>
         {weatherList.map(card => {
           return (
-            <ForecastCard
-              key={card.futureDate}
-              futureDate={card.futureDate}
-              future={future}
-              cardText1={card.cardText1}
-              cardText2={card.cardText2}
-              cardText3={card.cardText3}
-              iconURL={card.iconURL}
+            <DetailedForecastCard
+              time={card.time}
+              weatherDescription={card.weatherDescription}
+              weatherTemp={card.weatherTemp}
+              humidity={card.humidity}
+              cloudCover={card.cloudCover}
+              feelsLike={card.feelsLike}
+              minTemp={card.minTemp}
+              maxTemp={card.maxTemp}
+              windSpeed={card.windSpeed}
             />
           )
         })}
-      </>
-    )
+      </>)
+    }
+
+    else {
+      // iterate through the API response in order to populate the data on displayed cards
+      while (weatherTime < 40) {
+        // first get the weather icon picture
+        const weatherIconCode = res.list[weatherTime].weather[0].icon;
+        let iconURL = "http://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
+
+        // next get temperature in Fahrenheit and other relevant statistics
+        const weatherTemp = res.list[weatherTime].main.temp;
+        const humidity = res.list[weatherTime].main.humidity;
+        const weatherDescription = res.list[weatherTime].weather[0].description;
+
+        // Create new paragraphs to put onto each weather card
+        let futureDate = dayjs().add(future, 'd').format("dddd, MMMM D")
+        let cardText1 = "Temp: " + weatherTemp + " °F";
+        let cardText2 = "Humidity: " + humidity + "%";
+        let cardText3 = "Forecast: " + weatherDescription;
+        weatherList.push({
+          futureDate: futureDate,
+          future: future,
+          cardText1: cardText1,
+          cardText2: cardText2,
+          cardText3: cardText3,
+          iconURL: iconURL,
+        })
+
+        // increment weatherTime by 8 to get the next day's weather. Last day index will be 39, rather than 40.
+        weatherTime += 8;
+        future++;
+      }
+
+      // Finally, set the forecast cards JSX so that they are displayed.
+      setForecastCards(
+        <>
+          {weatherList.map(card => {
+            return (
+              <ForecastCard
+                key={card.futureDate}
+                futureDate={card.futureDate}
+                future={future}
+                cardText1={card.cardText1}
+                cardText2={card.cardText2}
+                cardText3={card.cardText3}
+                iconURL={card.iconURL}
+              />
+            )
+          })}
+        </>
+      )
+    }
   }
+
 
   /** Creates a list display of previously searched cities by mapping an array of city names to buttons.
    * @param {array} storedCities - An array consisting of the names of the prev cities. Should be lowercased.
@@ -125,6 +176,7 @@ function App() {
     }
   }, [])
 
+
   function submitForm(event) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -140,7 +192,7 @@ function App() {
   }
 
 
-  /** makes AJAX call to open weather api 
+  /** makes AJAX call to open weather api
    * @param {string} cityName - The name of a city to get the forecast for
   */
   const searchForecast = (cityName) => {
@@ -159,7 +211,7 @@ function App() {
         console.log(res.data);
         let prevCityArr = JSON.parse(localStorage.getItem("prevCities"));
         prevCityArr = (prevCityArr === null ? [] : prevCityArr);
-        
+
         // store the city name in an array in local storage, 
         // at index 0 of the array so that it will be displayed at the top of the previously searched cities list
         if (!prevCityArr.includes(cityName.toLowerCase())) {
@@ -179,8 +231,8 @@ function App() {
         alert("That city's forecast could not be found! Be sure to use correct spelling.");
       });
     }, delay * 1000)
-
   }
+
 
   return (
     <main className="App">
@@ -227,13 +279,13 @@ function App() {
 
             <Col>
               <Form.Group controlId="delay-form">
-                <Form.Control 
+                <Form.Control
                   type="number"
                   placeholder="Seconds of delay"
-                  min='0' 
-                  max='5' 
-                  defaultValue='0' 
-                  required 
+                  min='0'
+                  max='5'
+                  defaultValue='0'
+                  required
                   ref={fakeDelayRef}
                 />
                 <Form.Text className="text-muted">

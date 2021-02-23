@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Image, Col } from 'react-bootstrap';
 
-export default function ForecastCards(props: any) {
+export default function ForecastCard(props: any) {
 
   return (
     <Col lg={2}>
@@ -14,6 +14,10 @@ export default function ForecastCards(props: any) {
           <Image src={props.iconURL} className='card-img-top current-weather-icon' alt={`forecast for ${props.future} day(s) out`} />
 
           <Card.Text>
+            {props.cardText3}
+          </Card.Text>
+
+          <Card.Text>
             {props.cardText1}
           </Card.Text>
 
@@ -21,9 +25,6 @@ export default function ForecastCards(props: any) {
             {props.cardText2}
           </Card.Text>
 
-          <Card.Text>
-            {props.cardText3}
-          </Card.Text>
         </Card.Body>
       </Card>
     </Col>
