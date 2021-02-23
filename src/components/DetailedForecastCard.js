@@ -23,14 +23,6 @@ export default function DetailedForecastCard(props) {
             </ListGroup.Item>
 
             <ListGroup.Item>
-              {props.humidity}
-            </ListGroup.Item>
-
-            <ListGroup.Item>
-              {props.cloudCover}
-            </ListGroup.Item>
-
-            <ListGroup.Item>
               {props.feelsLike}
             </ListGroup.Item>
 
@@ -40,6 +32,14 @@ export default function DetailedForecastCard(props) {
 
             <ListGroup.Item>
               {props.maxTemp}
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              {props.humidity}
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              {props.cloudCover}
             </ListGroup.Item>
 
             <ListGroup.Item>

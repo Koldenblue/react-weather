@@ -14,10 +14,10 @@ function App() {
   const [forecastCards, setForecastCards] = useState(<></>);      // JSX for the forecast cards display
   const [prevSearchBar, setPrevSearchBar] = useState(<></>);      // JSX for the search bar of previous cities
   const [validated, setValidated] = useState(false);              // Validation check for the form
+  const [displayingCards, setDisplayingCards] = useState(false);  // tracks whether forecast cards are displayed
   const [cityName, setCityName] = useState("");
   const fakeDelayRef = useRef();
   const moreDetailCheckboxRef = useRef();
-
 
   /** Displays cards with the forecast on the screen.
    * @param {object} res - the response.data from the weather API
@@ -30,7 +30,6 @@ function App() {
     let moreDetails = moreDetailCheckboxRef.current.checked;
 
     if (moreDetails) {
-      console.log('more details')
       while (weatherTime < 5) {
         const weatherTemp = "Temp: " + res.list[weatherTime].main.temp + " °F";
         const humidity = "Humidity: " + res.list[weatherTime].main.humidity + "%";
@@ -41,7 +40,6 @@ function App() {
         const maxTemp = "Max Temp: " + res.list[weatherTime].main.temp_max + " °F";
         const windSpeed = "Wind Speed: " + res.list[weatherTime].wind.speed + " miles/hour";
         const time = dayjs(res.list[weatherTime].dt_txt, "YYYY-MM-DD h:mm:ss").format("dddd, MMMM D h:mm a")
-        console.log(time)
 
         weatherList.push({
           weatherTemp: weatherTemp,
@@ -223,7 +221,9 @@ function App() {
         }
         // store city name and populate the previously searched list.
         localStorage.setItem("prevCities", JSON.stringify(prevCityArr));
+        localStorage.setItem("lastForecast", JSON.stringify(res.data));
         displayForecastCards(res.data);
+        setDisplayingCards(true);
         populatePrevSearches(prevCityArr);
       }).catch(function (err) {
         console.error(err);
@@ -233,6 +233,14 @@ function App() {
     }, delay * 1000)
   }
 
+  const switchDetailedView = () => {
+    if (displayingCards) {
+      let res = JSON.parse(localStorage.getItem('lastForecast'));
+      if (res) {
+        displayForecastCards(res);
+      }
+    }
+  }
 
   return (
     <main className="App">
@@ -260,8 +268,9 @@ function App() {
               <Form.Check
                 type='checkbox'
                 id={`detail-form`}
-                label={`More detailed forecast?`}
+                label={`More detailed one-day forecast?`}
                 ref={moreDetailCheckboxRef}
+                onChange={switchDetailedView}
               />
             </Col>
 
