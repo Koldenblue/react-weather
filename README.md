@@ -19,9 +19,13 @@ The deployed app is viewable <a href='https://kmiller-react-weather.herokuapp.co
 
 <h3 id='installation'>Installation</h3>
 The react app may be installed with node.js and node package manager using 
-```npm install```
+```
+npm install
+```
 in the terminal, in the project folder. Once installed, the app may be run with 
-```npm run start```
+```
+npm run start
+```
 and then accessed in a browser at localhost:3000. TypeScript compiler will be required to edit and compile the main App.tsx file, while sass will be required to compile .scss files into CSS.
 
 <h3 id='usage'>Usage</h3>
@@ -31,7 +35,9 @@ The user may type in a city name to display a detailed forecast for a single day
 This project is licensed under the MIT License.
 
 <h3 id='test'>Tests</h3>
-```npm run test```
+```
+npm run test
+```
 for tests related to app rendering and the input forms
 
 <h3 id='questions'>Issues and Questions</h3>
