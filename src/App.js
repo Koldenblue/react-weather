@@ -87,7 +87,7 @@ function App() {
             while (weatherTime < 40) {
                 // Get the weather icon picture
                 var weatherIconCode = res.list[weatherTime].weather[0].icon;
-                var iconURL = "http://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
+                var iconURL = "https://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
                 // next get temperature in Fahrenheit and other relevant statistics
                 var cardText1 = "Temp: " + res.list[weatherTime].main.temp + " °F";
                 var cardText2 = "Humidity: " + res.list[weatherTime].main.humidity + "%";
@@ -163,7 +163,7 @@ function App() {
     */
     var searchForecast = function (cityName) {
         var delay = fakeDelayRef.current ? fakeDelayRef.current.value : 0;
-        var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
+        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="
             + cityName
             + "&units=imperial"
             + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
