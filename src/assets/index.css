@@ -39,6 +39,7 @@ body {
   background: #d9f6ff;
   background: linear-gradient(0deg, #d9f6ff 55%, #feffee 100%);
   margin: 0;
+  background-attachment: fixed;
   height: 100vh;
 }
 

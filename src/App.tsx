@@ -261,7 +261,6 @@ function App() {
       </Jumbotron>
 
       <Container>
-
         <Form noValidate validated={validated} onSubmit={(event) => submitForm(event)}>
           <Form.Row>
             <Col>
@@ -308,6 +307,7 @@ function App() {
           </Form.Row>
         </Form>
       </Container>
+
       <Container fluid>
         <hr />
         <Row>

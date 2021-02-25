@@ -2,8 +2,9 @@
 
 body {
   background: rgb(217,246,255);
-  background: linear-gradient(0deg, rgba(217,246,255,1) 55%, rgba(254,255,238,1) 100%); 
+  background: linear-gradient(0deg, rgba(217,246,255,1) 55%, rgba(254,255,238,1) 100%);
   margin: 0;
+  background-attachment: fixed;
   height: 100vh;
 }
 
