@@ -82,7 +82,7 @@ function App() {
       while (weatherTime < 40) {
         // Get the weather icon picture
         const weatherIconCode = res.list[weatherTime].weather[0].icon;
-        let iconURL: string = "http://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
+        let iconURL: string = "https://openweathermap.org/img/wn/" + weatherIconCode + "@2x.png";
 
         // next get temperature in Fahrenheit and other relevant statistics
         const cardText1: string = "Temp: " +  res.list[weatherTime].main.temp + " °F";
@@ -197,7 +197,7 @@ function App() {
   const searchForecast = (cityName: string): void => {
     let delay: number = fakeDelayRef.current ? fakeDelayRef.current.value as unknown as number : 0;
 
-    let queryURL: string = "http://api.openweathermap.org/data/2.5/forecast?q="
+    let queryURL: string = "https://api.openweathermap.org/data/2.5/forecast?q="
       + cityName
       + "&units=imperial"
       + "&appid=" + "c218adccd0a9e7a9f97aae69f078301b";
