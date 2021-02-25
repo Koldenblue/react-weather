@@ -79,7 +79,7 @@ function App() {
             }
             // Set the forecast cards JSX so that they are displayed in UI.
             setForecastCards(react_1["default"].createElement(react_1["default"].Fragment, null, weatherList.map(function (card) {
-                return (react_1["default"].createElement(DetailedForecastCard_1["default"], { time: card.time, weatherDescription: card.weatherDescription, weatherTemp: card.weatherTemp, humidity: card.humidity, cloudCover: card.cloudCover, feelsLike: card.feelsLike, minTemp: card.minTemp, maxTemp: card.maxTemp, windSpeed: card.windSpeed }));
+                return (react_1["default"].createElement(DetailedForecastCard_1["default"], { key: card.time, time: card.time, weatherDescription: card.weatherDescription, weatherTemp: card.weatherTemp, humidity: card.humidity, cloudCover: card.cloudCover, feelsLike: card.feelsLike, minTemp: card.minTemp, maxTemp: card.maxTemp, windSpeed: card.windSpeed }));
             })));
         }
         else {

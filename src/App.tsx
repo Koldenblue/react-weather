@@ -62,6 +62,7 @@ function App() {
         {weatherList.map(card => {
           return (
             <DetailedForecastCard
+              key={card.time}
               time={card.time}
               weatherDescription={card.weatherDescription}
               weatherTemp={card.weatherTemp}

@@ -25,7 +25,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "watch-sass": "sass.bat --watch ./src",
-    "watch-ts": "tsc src/*.tsx --watch src/components/*.tsx --watch --jsx react -esModuleInterop"
+    "watch-ts": "tsc src/*.tsx --watch --jsx react -esModuleInterop"
   },
   "eslintConfig": {
     "extends": [
