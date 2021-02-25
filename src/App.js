@@ -39,8 +39,9 @@ function App() {
     var _d = react_1.useState(false), validated = _d[0], setValidated = _d[1]; // Validation check for the form
     var _e = react_1.useState(false), displayingCards = _e[0], setDisplayingCards = _e[1]; // tracks whether forecast cards are displayed
     var _f = react_1.useState(""), cityName = _f[0], setCityName = _f[1];
-    var fakeDelayRef = react_1.useRef();
-    var moreDetailCheckboxRef = react_1.useRef();
+    var fakeDelayRef = react_1.useRef(null);
+    var moreDetailCheckboxRef = react_1.useRef(null);
+    var cityNameRef = react_1.useRef(null);
     /** Displays cards with the forecast data on the screen.
      * @param {object} res - the response.data from the weather API
     */
@@ -48,7 +49,7 @@ function App() {
         var weatherTime = 0;
         var future = 1;
         var weatherList = [];
-        var moreDetails = moreDetailCheckboxRef.current.checked;
+        var moreDetails = (moreDetailCheckboxRef.current ? moreDetailCheckboxRef.current.checked : false);
         // If the more details checkbox is checked, then display the DetailedForecastCard.js components.
         if (moreDetails) {
             // iterating through API data:
@@ -141,6 +142,9 @@ function App() {
             populatePrevSearches(storedCitiesArr);
             searchForecast(storedCitiesArr[0]);
         }
+        if (cityNameRef.current) {
+            cityNameRef.current.focus();
+        }
     }, []);
     function submitForm(event) {
         event.preventDefault();
@@ -158,7 +162,7 @@ function App() {
      * @param {string} cityName - The name of a city to get the forecast for
     */
     var searchForecast = function (cityName) {
-        var delay = fakeDelayRef.current.value;
+        var delay = fakeDelayRef.current ? fakeDelayRef.current.value : 0;
         var queryURL = "http://api.openweathermap.org/data/2.5/forecast?q="
             + cityName
             + "&units=imperial"
@@ -220,7 +224,7 @@ function App() {
                         react_1["default"].createElement(react_bootstrap_1.Form.Check, { type: 'checkbox', id: "detail-form", label: "Switch from 5-day forecast to detailed one-day forecast?", ref: moreDetailCheckboxRef, onChange: switchDetailedView })),
                     react_1["default"].createElement(react_bootstrap_1.Col, null,
                         react_1["default"].createElement(react_bootstrap_1.Form.Group, { controlId: "formCity" },
-                            react_1["default"].createElement(react_bootstrap_1.Form.Control, { type: "text", placeholder: "City Name", required: true, onChange: function (event) { return setCityName(event.target.value); } }),
+                            react_1["default"].createElement(react_bootstrap_1.Form.Control, { type: "text", placeholder: "City Name", required: true, onChange: function (event) { return setCityName(event.target.value); }, ref: cityNameRef }),
                             react_1["default"].createElement(react_bootstrap_1.Form.Text, { className: "text-muted" }, "Enter a city name to search the weather forecast in that city.")),
                         react_1["default"].createElement(react_bootstrap_1.Button, { variant: "success", type: "submit" }, "Submit")),
                     react_1["default"].createElement(react_bootstrap_1.Col, null,

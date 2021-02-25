@@ -16,8 +16,9 @@ function App() {
   const [validated, setValidated] = useState(false);              // Validation check for the form
   const [displayingCards, setDisplayingCards] = useState(false);  // tracks whether forecast cards are displayed
   const [cityName, setCityName] = useState("");
-  const fakeDelayRef = useRef<HTMLInputElement>();
-  const moreDetailCheckboxRef = useRef<HTMLInputElement>();
+  const fakeDelayRef = useRef<HTMLInputElement>(null);
+  const moreDetailCheckboxRef = useRef<HTMLInputElement>(null);
+  const cityNameRef = useRef<HTMLInputElement>(null);
 
   /** Displays cards with the forecast data on the screen.
    * @param {object} res - the response.data from the weather API
@@ -26,7 +27,7 @@ function App() {
     let weatherTime: number = 0;
     let future: number = 1;
     let weatherList: Array<any> = [];
-    let moreDetails: boolean = (moreDetailCheckboxRef.current.checked as boolean)
+    let moreDetails: boolean = (moreDetailCheckboxRef.current ? moreDetailCheckboxRef.current.checked : false)
 
     // If the more details checkbox is checked, then display the DetailedForecastCard.js components.
     if (moreDetails) {
@@ -170,6 +171,9 @@ function App() {
       populatePrevSearches(storedCitiesArr);
       searchForecast(storedCitiesArr[0])
     }
+    if (cityNameRef.current) {
+      cityNameRef.current.focus();
+    }
   }, [])
 
 
@@ -191,7 +195,7 @@ function App() {
    * @param {string} cityName - The name of a city to get the forecast for
   */
   const searchForecast = (cityName: string): void => {
-    let delay: number = (fakeDelayRef.current.value as unknown) as number;
+    let delay: number = fakeDelayRef.current ? fakeDelayRef.current.value as unknown as number : 0;
 
     let queryURL: string = "http://api.openweathermap.org/data/2.5/forecast?q="
       + cityName
@@ -275,7 +279,13 @@ function App() {
 
             <Col>
               <Form.Group controlId="formCity">
-                <Form.Control type="text" placeholder="City Name" required onChange={(event) => setCityName(event.target.value)} />
+                <Form.Control 
+                  type="text" 
+                  placeholder="City Name"
+                  required
+                  onChange={(event) => setCityName(event.target.value)}
+                  ref={cityNameRef}
+                />
                 <Form.Text className="text-muted">
                   Enter a city name to search the weather forecast in that city.
                 </Form.Text>
