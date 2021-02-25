@@ -11,7 +11,11 @@
 5. <a href="#test">Tests</a>
 6. <a href="#questions">Issues and Questions</a>
 <hr><h3 id='description'>Description</h3>
-The deployed app is viewable <a href='https://kmiller-react-weather.herokuapp.com/'>here</a>. The app uses the OpenWeather API in order to offer a 5 day forecast. Alternatively, the user may switch to a more detailed view of the forecast for the upcoming day. Recently searched cities are tracked with a search bar. Finally, the app allows for simulation of a delay in the AJAX call to the OpenWeather API, by increasing loading screen times.
+The deployed app is viewable <a href='https://kmiller-react-weather.herokuapp.com/'>here</a>. A video demonstration of the app may be viewed on <a href='https://youtu.be/hN__lsQoW4w'>YouTube</a>. The app uses the OpenWeather API in order to offer a 5 day forecast. Alternatively, the user may switch to a more detailed view of the forecast for the upcoming day. Recently searched cities are tracked with a search bar. Finally, the app allows for simulation of a delay in the AJAX call to the OpenWeather API, by increasing loading screen times.
+
+![image](https://user-images.githubusercontent.com/64618290/109105797-78b95e00-76e3-11eb-9435-53720195bccc.png)
+
+![image](https://user-images.githubusercontent.com/64618290/109105931-aacac000-76e3-11eb-9e36-5bf94e433be8.png)
 
 <h3 id='installation'>Installation</h3>
 The react app may be installed with node.js and node package manager using 
